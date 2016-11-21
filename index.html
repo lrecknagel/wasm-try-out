@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WASM TEST</title>
+  </head>
+  <body>
+    <script>
+      async function load() {
+        let binary = await fetch('fib.wasm');
+        let bytes = await binary.arrayBuffer();
+        let module = await WebAssembly.compile(bytes);
+        let instance = await WebAssembly.Instance(module, {});
+
+        return instance;
+      }
+
+      load().then(instance => console.log(instance));
+
+    </script>
+  </body>
+</html>
