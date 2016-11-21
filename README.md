@@ -71,6 +71,7 @@ ninja
 ../llvm/build/bin/clang -emit-llvm --target=wasm32 -S fib.c
 ../llvm/build/bin/llc fib.ll -march=wasm32
 s2wasm fib.s > fib.wast
+# alternative with: s2wasm --allocate-stack 1000000 fib.s > fib.wast
 wasm-as fib.wast -o fib.wasm
 
 # SUCCESS 🎉🎉🎉🎉🎉
