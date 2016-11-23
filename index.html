@@ -3,19 +3,67 @@
   <head>
     <meta charset="utf-8">
     <title>WASM TEST</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
     <script>
-      async function load() {
-        let binary = await fetch('fib.wasm');
-        let bytes = await binary.arrayBuffer();
-        let module = await WebAssembly.compile(bytes);
-        let instance = await WebAssembly.Instance(module, {});
 
-        return instance;
+      async function load() {
+        let c_binary = await fetch('/c/fib.wasm');
+        let cpp_binary = await fetch('/cpp/fib.wasm');
+
+        let c_bytes = await c_binary.arrayBuffer();
+        let cpp_bytes = await cpp_binary.arrayBuffer();
+
+        let c_module = await WebAssembly.compile(c_bytes);
+        let cpp_module = await WebAssembly.compile(cpp_bytes);
+
+        let c_instance = await WebAssembly.Instance(c_module, {});
+        let cpp_instance = await WebAssembly.Instance(cpp_module, {});
+
+        return [c_instance, cpp_instance];
       }
 
-      load().then(instance => console.log(instance));
+      let funcs = [];
+      load()
+        .then(
+          instances => {
+            instances.map(
+              instance => {
+                funcs.push(instance.exports);
+              }
+            );
+            exec(40);
+          }
+        );
+
+      function exec(times) {
+        let begin = performance.now();
+        console.log(funcs[0].fib(times));
+        console.log("C WASM takes: " + (performance.now() - begin).toString() );
+
+        begin = performance.now();
+        console.log(funcs[1]._Z3fibi(times));
+        console.log("C++ WASM takes: " + (performance.now() - begin).toString() );
+
+        begin = performance.now();
+        console.log(fib(times));
+        console.log("Vanilla JS takes: " + (performance.now() - begin).toString() );
+      }
+
+      function fib(n) {
+        if(n<0)
+          return -1;
+
+        else if (n==0)
+          return 0;
+
+        else if (n==1)
+          return 1;
+
+        else if (n>1)
+          return fib(n-1) + fib(n-2);
+      }
 
     </script>
   </body>
