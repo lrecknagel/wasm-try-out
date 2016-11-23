@@ -1,0 +1,23 @@
+{
+  "name": "wasm-try-out",
+  "version": "0.0.1",
+  "description": "Small tryout for the new wasm technique",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lrecknagel/wasm-try-out.git"
+  },
+  "author": "Lucas Recknagel",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/lrecknagel/wasm-try-out/issues"
+  },
+  "homepage": "https://github.com/lrecknagel/wasm-try-out#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
